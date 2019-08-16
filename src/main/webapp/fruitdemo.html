@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>水果饼状图</title>
+    <script src="jquery/jquery-2.1.1.min.js"></script>
+    <script src="echarts/js/echarts.min.js"></script>
+</head>
+<body>
+<div id="pic1" style="width: 800px;height:600px;margin: 20px auto"></div>
+<script>
+    //创建echarts对象在哪个节点上
+    var myCharts1 = echarts.init(document.getElementById('pic1'));
+    //设置选项
+    var option1 = {
+        //背景颜色
+        backgroundColor: 'white',
+        //标题
+        title: {
+            text: '用户有效性占比',
+            left: 'center',
+            top: 50,
+            textStyle: {
+                color: '#ccc'
+            }
+        },
+        //工具提示
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {d}%"
+        },
+        //图表属性
+        series : [
+            {
+                name:'用户有效性占比',//名称
+                type:'pie',//声明这是一个饼图
+                clockwise:'true',
+                startAngle:'0',
+                radius : '40%',//半径
+                center: ['50%', '50%'],//居中
+                //数据-->ajax
+                data:[
+                    {
+                        "name": "无效用户",
+                        "value": 1
+                    },
+                    {
+                        "name": "有效用户",
+                        "value": 7
+                    }
+                ],
+            }
+        ]
+
+    };
+
+    //ajax
+    $.ajax({
+        //请求方式
+        type : "POST",
+        async:false,
+        //请求的媒体类型
+        contentType: "application/json;charset=UTF-8",
+        //接受数据类型
+        dataType:"json",
+        //请求地址
+        url : "http://localhost:8080//listAllFruit",
+        //数据，json字符串
+        // data : JSON.stringify(
+        //     {
+        //         "userid":userid,
+        //     }
+        // ),
+        //请求成功
+        success : function(result) {
+            console.log(result);
+            if(result){
+                option1.series=[
+                    {
+                        name:'用户有效性占比',//名称
+                        type:'pie',//声明这是一个饼图
+                        clockwise:'true',
+                        startAngle:'0',
+                        radius : '40%',//半径
+                        center: ['50%', '50%'],//居中
+                        //数据-->ajax
+                        data:result
+                    }
+                ]
+            }
+
+        },
+        //请求失败，包含具体的错误信息
+        error : function(e){
+            console.log(e.status);
+            console.log(e.responseText);
+        }
+    });
+
+    //将选项对象赋值给echarts对象。
+    myCharts1.setOption(option1,true);
+
+</script>
+</body>
+</html>

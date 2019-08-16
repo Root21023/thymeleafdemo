@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>柱状图练习</title>
+    <script src="jquery/jquery-2.1.1.min.js"></script>
+    <script src="echarts/js/echarts.min.js"></script>
+</head>
+<body>
+    <div id="barDiv" style="width: 800px;height:600px;margin: 20px auto"></div>
+    <script>
+        var content = document.getElementById("barDiv");
+        var mycahrts = echarts.init(content);
+
+        var option = {
+            xAxis: {
+                type: 'value',
+                boundaryGap: [0, 0.01]
+            },
+            yAxis: {
+                type: 'category',
+                data: ['巴西','印尼','美国','印度','中国','世界人口(万)']
+            },
+            series: [
+//                {
+//                    name: '2011年',
+//                    type: 'bar',
+//                    data: [18203, 23489, 29034, 104970, 131744, 630230]
+//                }
+//                ,
+//                {
+//                    name: '2012年',
+//                    type: 'bar',
+//                    data: [19325, 23438, 31000, 121594, 134141, 681807]
+//                },
+//                 {
+//                     name: '2018年',
+//                     type: 'bar',
+//                     data: [19325, 23438, 31000, 130594, 139541, 681807]
+//                 }
+            ]
+        };
+        //如何在前端获取到series的值并将其赋值到option.series中
+        //ajax
+        $.ajax({
+            //请求方式
+            type : "POST",
+            async:false,
+            //请求的媒体类型
+            contentType: "application/json;charset=UTF-8",
+            //接受数据类型
+            dataType:"json",
+            //请求地址
+            url : "http://localhost:8080//getBarChartsData",
+            //数据，json字符串
+            // data : JSON.stringify(
+            //     {
+            //         "userid":userid,
+            //     }
+            // ),
+            //请求成功
+            success : function(result) {
+                console.log(result);
+                if(result){
+                    // alert("删除成功");
+                    $(result).each(function (index,item) {
+                        option.series.push(item);
+                    })
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        });
+
+        mycahrts.setOption(option,true);
+    </script>
+</body>
+</html>
